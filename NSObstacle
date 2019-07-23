@@ -3,9 +3,9 @@
 %First, define the grid, stepsize, iterations for SOR method in pressure.
 nx=128;ny=64; 
 dt=0.001;
-nstep=100;
+nstep=500;
 mu=0.005;
-maxit=10000;
+maxit=100;
 beta=1.2;
 h=1/ny;
 %Definitions of three regions and the fields I am going to operate with
@@ -54,9 +54,9 @@ c3(1,ny/2+2:ny)=1/3;
 c3(1:nxx+2,2)=1/3;
 c3(2:nxx+2,ny+1)=1/3;
 c3(1,ny+1)=1/2;
-c3(nxx+1, 2:ny+1) = 1/3;
-c3(nxx+1, ny+1) = 1/2;
-c3(nxx+1, 2) = 1/2;
+%c3(nxx+1, 2:ny+1) = 1/3;
+%c3(nxx+1, ny+1) = 1/2;
+%c3(nxx+1, 2) = 1/2;
 time=0.0;
 
 for is=1:nstep
@@ -90,6 +90,7 @@ v3(1:nxx+2, ny+1) = 0; % Symmetry wall
 u3(1, ny/2+2: ny+1) = 0;% wall
 u3(nxx+1, 2:ny+1) = 1; % outlet
 u3(nxx, 2:ny+1) = 1; % outlet
+p3(nxx+1, 2:ny+1) = -5; % outlet
 
 %p3(nxx+2, 2:ny+1) = 1;
 for i=2:nx,for j=2:ny+1 %First, calculate the intermediate velocity ut for whole region 1, from 2:nx, except nx+1 which needs something from second region
