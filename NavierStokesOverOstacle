@@ -66,15 +66,15 @@ v1(1:nx+2,1)=0; %Normal velocity
 u1(1, 2:ny) = 1; %Inlet
 u1(2:nx, ny+2) = u1(2:nx, ny+1); %Symmetry
 v1(2:nx+1, ny+1) = 0; %Symmetry
-v1(nx+2, ny/2+2:ny+1) = -v1(nx+1, ny/2+2:ny+1); %No slip wall
-u1(nx+1, ny/2+2:ny+2) = 0; %Normal velocity
+v1(nx+2, ny/2+2:ny+1) = -v1(nx+1, ny/2+2:ny+1); %No slip wall at obstacle
+u1(nx+1, ny/2+2:ny+2) = 0; %Normal velocity at obstacle
 v1(nx+2, 2:ny/2+1) = v2(1, 2:ny/2+1); %BOUNDARY CONDITION 
 v2(1, ny/2+2:ny+1) = v1(nx+2, ny/2+2:ny+1); %BOUNDARY CONDITION
 
 u2(1:nx+1,1)=-u2(1:nx+1,2); %No slip wall
 v2(1:nx+2,1)= 0; %Normal velocity
 u2(1:nx+1, ny/2+3:ny+2) = 0; % No slip wall
-v2(1:nx+2, ny/2+2:ny+2) = 0; %No slip wall
+v2(2:nx+2, ny/2+1:ny+2) = 0; %No slip wall
 p2(1:nx+2, ny/2+2:ny+2) = 0; %No slip wall
 u2(1:nx+1, ny/2+2) = -u2(1:nx+1, ny/2+1); %No slip wall
 v2(1:nx+2, ny/2+1) = 0; %Normal velocity
@@ -82,9 +82,9 @@ v2(nx+1, ny/2+2:ny+1) = -v3(1, ny/2+2:ny+1);
 v2(nx+2, 2:ny/2+2) = v3(1, 2:ny/2+2);
 
 u3(1:nxx+1,1)=-u3(1:nxx+1,2); %no slip
-v3(1:nxx+2,1)= 0;%
-u3(1:nxx+1, ny+2) = u3(1:nxx+1, ny+1); %
-v3(1:nxx+2, ny+1) = 0; % wall
+v3(1:nxx+2,1)= 0;%no slip wall
+u3(1:nxx+1, ny+2) = u3(1:nxx+1, ny+1); %Symmetry boundary
+v3(1:nxx+2, ny+1) = 0; % Symmetry wall
 u3(1, ny/2+2: ny+1) = 0;% wall
 u3(nxx+1, 2:ny+1) = 1; % outlet
 for i=2:nx,for j=2:ny+1 %
@@ -106,6 +106,7 @@ v1(i,j))-(u1(i-1,j+1)+u1(i-1,j))*(v1(i,j)+v1(i-1,j))+...
 (v1(i,j+1)+v1(i,j))^2-(v1(i,j)+v1(i,j-1))^2)+...
 (mu/h^2)*(v1(i+1,j)+v1(i-1,j)+v1(i,j+1)+v1(i,j-1)-4*v1(i,j)));
 end,end
+vt1(nx+2, 2:ny+1) = vt2(1, 2:ny+1);
 for j = 2:ny/2+1
 vt1(nx+1,j)=v1(nx+1,j)+dt*(-(0.25/h)*((u1(nx+1,j+1)+u1(nx+1,j))*(v2(1,j)+...
 v1(nx+1,j))-(u1(nx,j+1)+u1(nx,j))*(v1(nx+1,j)+v1(nx,j))+...
@@ -149,13 +150,13 @@ v2(i,j))-(u2(i-1,j+1)+u2(i-1,j))*(v2(i,j)+v2(i-1,j))+...
 (v2(i,j+1)+v2(i,j))^2-(v2(i,j)+v2(i,j-1))^2)+...
 (mu/h^2)*(v2(i+1,j)+v2(i-1,j)+v2(i,j+1)+v2(i,j-1)-4*v2(i,j)));
 end,end
+vt2(nx+2, 2:ny+1) = vt3(1, 2:ny+1);
 for j = 2:ny/2 %
 vt2(nx+1,j)=v2(nx+1,j)+dt*(-(0.25/h)*((u2(nx+1,j+1)+u2(nx+1,j))*(v3(1,j)+...
 v2(nx+1,j))-(u2(nx,j+1)+u2(nx,j))*(v2(nx+1,j)+v2(nx,j))+...
 (v2(nx+1,j+1)+v2(nx+1,j))^2-(v2(nx+1,j)+v2(nx+1,j-1))^2)+...
 (mu/h^2)*(v3(1,j)+v2(nx,j)+v2(nx+1,j+1)+v2(nx+1,j-1)-4*v2(nx+1,j)));
 end
-vt1(nx+2, 2:ny/2+1) = vt2(1, 2:ny/2+1);
 %Še tretja regija.
 for j=2:ny/2+1
 ut3(1,j)=u3(1, j)+dt*(-(0.25/h)*((u3(2,j)+u3(1,j))^2-(u3(1,j)+...
@@ -181,7 +182,6 @@ v3(i,j))-(u3(i-1,j+1)+u3(i-1,j))*(v3(i,j)+v3(i-1,j))+...
 (v3(i,j+1)+v3(i,j))^2-(v3(i,j)+v3(i,j-1))^2)+...
 (mu/h^2)*(v3(i+1,j)+v3(i-1,j)+v3(i,j+1)+v3(i,j-1)-4*v3(i,j)));
 end,end
-vt2(nx+2, 2:ny/2+1) = vt3(1, 2:ny/2+1);
 for it=1:maxit % solve for pressure
 for i=2:nx,for j=2:ny+1
 p1(i,j)=beta*c1(i,j)*(p1(i+1,j)+p1(i-1,j)+p1(i,j+1)+p1(i,j-1)-...
