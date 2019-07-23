@@ -80,6 +80,7 @@ u2(1:nx+1, ny/2+2) = -u2(1:nx+1, ny/2+1); %No slip wall
 v2(1:nx+2, ny/2+1) = 0; %Normal velocity
 v2(nx+1, ny/2+2:ny+1) = -v3(1, ny/2+2:ny+1);
 v2(nx+2, 2:ny/2+2) = v3(1, 2:ny/2+2);
+
 u3(1:nxx+1,1)=-u3(1:nxx+1,2); %no slip
 v3(1:nxx+2,1)= 0;%
 u3(1:nxx+1, ny+2) = u3(1:nxx+1, ny+1); %
