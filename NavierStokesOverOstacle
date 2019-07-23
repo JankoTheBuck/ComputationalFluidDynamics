@@ -1,4 +1,6 @@
 %Solving a flow over an object
+%Geometry can be found: http://shrani.si/f/3l/13P/2Tihb3iM/projekt2.png
+%First, define the grid, stepsize, iterations for SOR method in pressure.
 nx=64;ny=32; 
 dt=0.0001;
 nstep=10;
@@ -6,22 +8,25 @@ mu=0.05;
 maxit=1000;
 beta=1.2;
 h=1/ny;
-u1=zeros(nx+1,ny+2);
-v1=zeros(nx+2,ny+1);
-p1=zeros(nx+2,ny+2);
+%Definitions of three regions and the fields I am going to operate with
+%FIRST REGION
+u1=zeros(nx+1,ny+2); %x direction velocity
+v1=zeros(nx+2,ny+1); %y direction velocity
+p1=zeros(nx+2,ny+2); %Pressure
 ut1=zeros(nx+1,ny+2);
 vt1=zeros(nx+2,ny+1);
-c1=zeros(nx+2,ny+2)+0.25;
+c1=zeros(nx+2,ny+2)+0.25;%This c1 field is the field that is needed for pressure calculations. It is 0.25 at whole domain, except 0.33 at boundaries and 1/2 at corners
 uu1=zeros(nx+1,ny+1);
 vv1=zeros(nx+1,ny+1);
 w1=zeros(nx+1,ny+1);
-c1(nx+1,ny/2+1:ny)=1/3;
-c1(1:nx+2,2)=1/3;
-c1(1:nx,ny+1)=1/3;
-c1(nx+1,ny+1)=1/2;
-c1(2, 3:ny) = 1/3;
-c1(2, 2) = 1/2;
-c1(2, ny+1) = 1/2;
+c1(nx+1,ny/2+2:ny)=1/3; %Boundary at the wall of the obstacle
+c1(1:nx+2,2)=1/3; %Boundary upper wall
+c1(1:nx,ny+1)=1/3; %Boundary symmetry wall
+c1(nx+1,ny+1)=1/2; %Corner between obstacle and symmetry
+c1(2, 3:ny) = 1/3; %Inlet boundary
+c1(2, 2) = 1/2; %Corner between upper wall and inlet boundary
+c1(2, ny+1) = 1/2; %Corner between symmetry wall and inlet boundary
+%SECOND REGION
 u2=zeros(nx+1,ny+2);
 v2=zeros(nx+2,ny+1);
 p2=zeros(nx+2,ny+2);
@@ -31,14 +36,11 @@ c2=zeros(nx+2,ny+2)+0.25;
 uu2=zeros(nx+1,ny+1);
 vv2=zeros(nx+1,ny+1);
 w2=zeros(nx+1,ny+1);
-c2(1:nx+2,2)=1/3;
-c2(1:nx+2,ny/2+1)=1/3;
-%c2(nx+1, ny/2+1) = 1/2;
-%c2(nx+1, ny+1) = 1/2;
-%c2(2,ny+1)=1/2;
-%c2(2,ny/2+1)=1/2;
+c2(1:nx+2,2)=1/3; %Upper wall
+c2(1:nx+2,ny/2+1)=1/3; %obstacle up
 nxx = 128;
 h3 = 1/ny;
+%THIRD REGION
 u3=zeros(nxx+1,ny+2);
 v3=zeros(nxx+2,ny+1);
 p3=zeros(nxx+2,ny+2);
