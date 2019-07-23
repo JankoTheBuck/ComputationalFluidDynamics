@@ -1,11 +1,12 @@
+
 %Solving a flow over an object
 %Geometry can be found: http://shrani.si/f/3l/13P/2Tihb3iM/projekt2.png
 %First, define the grid, stepsize, iterations for SOR method in pressure.
-nx=64;ny=32; 
-dt=0.0001;
-nstep=10;
-mu=0.05;
-maxit=1000;
+nx=128;ny=64; 
+dt=0.001;
+nstep=100;
+mu=0.005;
+maxit=100;
 beta=1.2;
 h=1/ny;
 %Definitions of three regions and the fields I am going to operate with
@@ -38,7 +39,7 @@ vv2=zeros(nx+1,ny+1);
 w2=zeros(nx+1,ny+1);
 c2(1:nx+2,2)=1/3; %Upper wall
 c2(1:nx+2,ny/2+1)=1/3; %obstacle up
-nxx = 128;
+nxx = 256;
 h3 = 1/ny;
 %THIRD REGION
 u3=zeros(nxx+1,ny+2);
@@ -70,7 +71,7 @@ v1(nx+2, ny/2+2:ny+1) = -v1(nx+1, ny/2+2:ny+1); %No slip wall at obstacle
 u1(nx+1, ny/2+2:ny+2) = 0; %Normal velocity at obstacle
 v1(nx+2, 2:ny/2+1) = v2(1, 2:ny/2+1); %BOUNDARY CONDITION 
 v2(1, ny/2+2:ny+1) = v1(nx+2, ny/2+2:ny+1); %BOUNDARY CONDITION
-
+p1(1, 2:ny+1) = 1;
 u2(1:nx+1,1)=-u2(1:nx+1,2); %No slip wall
 v2(1:nx+2,1)= 0; %Normal velocity
 u2(1:nx+1, ny/2+3:ny+2) = 0; % No slip wall
@@ -87,6 +88,7 @@ u3(1:nxx+1, ny+2) = u3(1:nxx+1, ny+1); %Symmetry boundary
 v3(1:nxx+2, ny+1) = 0; % Symmetry wall
 u3(1, ny/2+2: ny+1) = 0;% wall
 u3(nxx+1, 2:ny+1) = 1; % outlet
+%p3(nxx+2, 2:ny+1) = 1;
 for i=2:nx,for j=2:ny+1 %First, calculate the intermediate velocity ut for whole region 1, from 2:nx, except nx+1 which needs something from second region
 ut1(i,j)=u1(i,j)+dt*(-(0.25/h)*((u1(i+1,j)+u1(i,j))^2-(u1(i,j)+...
 u1(i-1,j))^2+(u1(i,j+1)+u1(i,j))*(v1(i+1,j)+...
@@ -121,7 +123,7 @@ v1(nx+1,j))-(u1(nx,j+1)+u1(nx,j))*(v1(nx+1,j)+v1(nx,j))+...
 (mu/h^2)*(v2(1,j)+v1(nx,j)+v1(nx+1,j+1)+v1(nx+1,j-1)-4*v1(nx+1,j)));
 end
 for j=2:ny/2+1 %Second region, first vector
-ut2(1,j)=u1(1, j)+dt*(-(0.25/h)*((u2(2,j)+u2(1,j))^2-(u2(1,j)+...
+ut2(1,j)=u2(1, j)+dt*(-(0.25/h)*((u2(2,j)+u2(1,j))^2-(u2(1,j)+...
 u1(nx+1,j))^2+(u2(1,j+1)+u2(1,j))*(v2(2,j)+...
 v2(1,j))-(u2(1,j)+u2(1,j-1))*(v2(2,j-1)+v2(1,j-1)))+...
 (mu/h^2)*(u2(2,j)+u1(nx+1,j)+u2(1,j+1)+u2(1,j-1)-4*u2(1,j)));
