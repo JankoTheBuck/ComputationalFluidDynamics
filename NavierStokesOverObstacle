@@ -202,10 +202,10 @@ end,end
 p2(1:nx+2, ny/2+2:ny+1) = 0;
 for j=2:ny/2+1
 p2(nx+1,j)=beta*c2(nx+1,j)*(p3(1,j)+p2(nx,j)+p2(nx+1,j+1)+p2(nx,j-1)-...
-(h/dt)*(ut2(nx,j)-ut2(nx,j)+vt2(nx+1,j)-vt2(nx+1,j-1)))+(1-beta)*p2(nx+1,j);
+(h/dt)*(ut2(nx+1,j)-ut2(nx,j)+vt2(nx+1,j)-vt2(nx+1,j-1)))+(1-beta)*p2(nx+1,j);
 end
 for j =2:ny+1
-p3(1,j)=beta*c3(1,j)*(p3(2,j)+p2(nx+1,j)+p3(1,j+1) +p3(1,j-1)-...
+p3(1,j)=beta*c3(1,j)*(p3(2,j)+p2(nx+1,j)+p3(1,j+1)+p3(1,j-1)-...
 (h/dt)*(ut3(1,j)-ut2(nx+1,j)+vt3(1,j)-vt3(1,j-1)))+(1-beta)*p3(1,j);
 end
 for i=2:nxx+1,for j=2:ny+1
