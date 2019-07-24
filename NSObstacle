@@ -73,14 +73,16 @@ for is=1:nstep
     t1(1, 2:ny+1) = 0; %inlet temperature
     t1(2:nx+1, 1) = t1(2:nx+1, 2); %upper boundary, no flux
     t1(2:nx+1, ny+2) = t1(2:nx+1, ny+1); %lower boundary, symmetry, no flux
+    t1(nx+2, ny/2+2:ny+1) = 0; %Left boundary of the obstacle
     t2(1, ny/2+2:ny+1) = 1; %Left boundary of the obstacle
     t2(1:nx+2, 1) = t2(1:nx+2, 2); %upper wall
-    t2(1:nx+2, ny/2+2) = t2(1:nx+2, ny/2+1); %obstacle
+    t2(1:nx+2, ny/2+2) =0; %obstacle
     t3(1:nxx+2, 1) = t3(1:nxx+2, 2); %upper wall
     t3(nxx+1, 2:ny+1) = t3(nxx, 2:ny+1); %outlet
     t3(2:nxx+1, ny+2) = t3(2:nxx+1, ny+1); %lower boundary
     t2(nxx+1, ny/2+2:ny+1) = 1; %right wall of the obstacle
-    
+    t2(nxx+2, ny/2+2:ny+1) = 1; %right wall of the obstacle
+
     u1(2:nx+1,1)=-u1(2:nx+1,2); %No slip wall
     v1(1:nx+2,1)=0; %Normal velocity
     u1(1, 2:ny+1) = 1; %Inlet
@@ -271,7 +273,11 @@ for is=1:nstep
         tt1(nx+1, j) = t1(nx+1, j)+dt*alpha*((t2(1, j)-2*t1(nx+1,j)+t1(nx, j))/(2*h^2)+(t1(nx+1, j+1)-2*t1(nx+1, j)+t1(nx+1, j-1))/(2*h^2))-...
         dt*u1(nx+1, j)*(t2(1, j)-t1(nx+1, j))/h-v1(nx+1, j)*(t1(nx+1, j+1)-t1(nx+1, j))/h;
     end
-    for i=1, for j=2:ny+1
+    for i=nx+1, for j=ny/2+2:ny+1
+        tt1(i, j) = t1(i, j)+dt*alpha*((t1(i+1, j)-2*t1(i,j)+t1(i-1, j))/(2*h^2)+(t1(i, j+1)-2*t1(i, j)+t1(i, j-1))/(2*h^2))-...
+        dt*u1(i, j)*(t1(i+1, j)-t1(i, j))/h-v1(i, j)*(t1(i, j+1)-t1(i, j))/h;
+    end, end
+    for i=1, for j=2:ny/2+1
         tt2(i, j) = t2(i, j)+dt*alpha*((t2(i+1, j)-2*t2(i,j)+t1(nx+1, j))/(2*h^2)+(t2(i, j+1)-2*t2(i, j)+t2(i, j-1))/(2*h^2))-...
         dt*u2(i, j)*(t2(i+1, j)-t2(i, j))/h-v2(i, j)*(t3(i, j+1)-t2(i, j))/h;
     end, end
@@ -283,7 +289,7 @@ for is=1:nstep
         tt2(nx+1, j) = t2(nx+1, j)+dt*alpha*((t3(1, j)-2*t2(nx+1,j)+t2(nx, j))/(2*h^2)+(t2(nx+1, j+1)-2*t2(nx+1, j)+t2(nx+1, j-1))/(2*h^2))-...
         dt*u2(nx+1, j)*(t3(1, j)-t2(nx+1, j))/h-v2(nx+1, j)*(t2(nx+1, j+1)-t2(nx+1, j))/h;
     end
-    for i=1, for j=2:ny/2+1
+    for i=1, for j=2:ny+1
         tt3(i, j) = t3(i, j)+dt*alpha*((t3(i+1, j)-2*t3(i,j)+t2(nx+1, j))/(2*h^2)+(t3(i, j+1)-2*t3(i, j)+t3(i, j-1))/(2*h^2))-...
         dt*u3(i, j)*(t3(i+1, j)-t3(i, j))/h-v3(i, j)*(t3(i, j+1)-t3(i, j))/h;
     end, end
