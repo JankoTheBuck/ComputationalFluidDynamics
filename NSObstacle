@@ -1,5 +1,6 @@
 %Solving a flow over an object
 %Geometry can be found: http://shrani.si/f/3l/13P/2Tihb3iM/projekt2.png
+%Methods I am using: http://shrani.si/f/3g/5y/YyMFWcG/adv.png
 %First, define the grid, stepsize, iterations for SOR method in pressure.
 nx=128;ny=128; 
 dt=0.001;
