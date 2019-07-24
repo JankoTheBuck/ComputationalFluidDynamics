@@ -65,10 +65,10 @@ for is=1:nstep
 u1(2:nx+1,1)=-u1(2:nx+1,2); %No slip wall
 v1(1:nx+2,1)=0; %Normal velocity
 u1(1, 2:ny+1) = 1; %Inlet
-u1(2, 2:ny+1) = 1; %Inlet
+%u1(2, 2:ny+1) = 1; %Inlet
 
 u1(2:nx, ny+2) = u1(2:nx, ny+1); %Symmetry
-v1(2:nx+1, ny+1) = 0; %Symmetry
+v1(2:nx, ny+1) = 0; %Symmetry
 v1(nx+2, ny/2+2:ny+1) = -v1(nx+1, ny/2+2:ny+1); %No slip wall at obstacle
 u1(nx+1, ny/2+2:ny+2) = 0; %Normal velocity at obstacle
 v1(nx+2, 2:ny/2+1) = v2(1, 2:ny/2+1); %BOUNDARY CONDITION 
@@ -90,7 +90,7 @@ u3(2:nxx+1, ny+2) = u3(2:nxx+1, ny+1); %Symmetry boundary
 v3(2:nxx+2, ny+1) = 0; % Symmetry wall
 u3(1, ny/2+2: ny+1) = 0;% wall
 u3(nxx+1, 2:ny+1) = 1; % outlet
-u3(nxx, 2:ny+1) = 1; % outlet
+%u3(nxx, 2:ny+1) = 1; % outlet
 p3(nxx+1, 2:ny+1) = -5; % outlet
 
 %p3(nxx+2, 2:ny+1) = 1;
