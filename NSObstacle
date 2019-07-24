@@ -2,9 +2,9 @@
 %Geometry can be found: http://shrani.si/f/3l/13P/2Tihb3iM/projekt2.png
 %Methods I am using: http://shrani.si/f/3g/5y/YyMFWcG/adv.png
 %First, define the grid, stepsize, iterations for SOR method in pressure.
-nx=128;ny=128; 
-nxx = 256;
-dt=0.00001;
+nx=32;ny=32; 
+nxx = 64;
+dt=0.0001;
 nstep=1000;
 mu=0.05;
 maxit=100;
@@ -84,10 +84,9 @@ for is=1:nstep
     u2(1:nx+1, ny/2+2) = -u2(1:nx+1, ny/2+1); %No slip wall
     v2(1:nx+2, ny/2+1) = 0; %Normal velocity
     v2(nx+1, ny/2+2:ny+1) = -v3(1, ny/2+2:ny+1);
-    v2(nx+2, 2:ny/2+1) = v3(1, 2:ny/2+1);
 
     u3(1:nxx+1,1)= -u3(1:nxx+1,2); %no slip
-    v3(1:nxx+2,1)= 0;%no slip wall
+    v3(1:nxx+1,1)= 0;%no slip wall
     u3(2:nxx+1, ny+2) = u3(2:nxx+1, ny+1); %Symmetry boundary
     v3(2:nxx+2, ny+1) = 0; % Symmetry wall
     u3(1, ny/2+2: ny+1) = 0;% wall
@@ -298,3 +297,5 @@ c3 = transpose(c3);
 p1 = transpose(p1);
 p2 = transpose(p2);
 p3 = transpose(p3);
+p = [p1(1:ny+1, 1:nx), p2(1:ny+1, 2:nx+1)];
+p = [p, p3(1:ny+1, 1:nxx)];
