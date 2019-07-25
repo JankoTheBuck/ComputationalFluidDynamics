@@ -4,8 +4,8 @@
 %First, define the grid, stepsize, iterations for SOR method in pressure.
 nx=64;ny=64; 
 nxx = 128;
-dt=0.0001;
-nstep=10000;
+dt=0.001;
+nstep=1000;
 mu=0.05;
 maxit=100;
 beta=1.2;
@@ -92,7 +92,7 @@ for is=1:nstep
     u1(nx+1, ny/2+2:ny+2) = 0; %Normal velocity at obstacle
     v1(nx+2, 2:ny/2+1) = v2(1, 2:ny/2+1); %BOUNDARY CONDITION 
     v2(1, ny/2+2:ny+1) = v1(nx+2, ny/2+2:ny+1); %BOUNDARY CONDITION
-    p1(1, 2:ny+1) = 1;
+    p1(1, 2:ny+1) = 60;
     u2(1:nx+1,1)=-u2(1:nx+1,2); %No slip wall
     v2(1:nx+2,1)= 0; %Normal velocity
     u2(1:nx+1, ny/2+3:ny+2) = 0; % OBSTACLE
@@ -267,31 +267,31 @@ for is=1:nstep
     
     for i=2:nx, for j=2:ny+1
         tt1(i, j) = t1(i, j)+dt*alpha*((t1(i+1, j)-2*t1(i,j)+t1(i-1, j))/(h^2)+(t1(i, j+1)-2*t1(i, j)+t1(i, j-1))/(h^2))-...
-        dt*u1(i, j)*(t1(i+1, j)-t1(i, j))/h-dt*v1(i, j)*(t1(i, j+1)-t1(i, j))/h;
+        dt*u1(i, j)*(t1(i+1, j)-t1(i-1, j))/(2*h)-dt*v1(i, j)*(t1(i+1, j)-t1(i, j-1))/(2*h);
     end, end
     for j=2:ny+1
         tt1(nx+1, j) = t1(nx+1, j)+dt*alpha*((t2(1, j)-2*t1(nx+1,j)+t1(nx, j))/(h^2)+(t1(nx+1, j+1)-2*t1(nx+1, j)+t1(nx+1, j-1))/(h^2))-...
-        dt*u1(nx+1, j)*(t2(1, j)-t1(nx+1, j))/h-dt*v1(nx+1, j)*(t1(nx+1, j+1)-t1(nx+1, j))/h;
+        dt*u1(nx+1, j)*(t2(1, j)-t1(nx, j))/(2*h)-dt*v1(nx+1, j)*(t1(nx+1, j+1)-t1(nx+1, j-1))/(2*h);
     end
     for i=1, for j=2:ny/2+1
         tt2(i, j) = t2(i, j)+dt*alpha*((t2(i+1, j)-2*t2(i,j)+t1(nx+1, j))/(h^2)+(t2(i, j+1)-2*t2(i, j)+t2(i, j-1))/(h^2))-...
-        dt*u2(i, j)*(t2(i+1, j)-t2(i, j))/h-dt*v2(i, j)*(t2(i, j+1)-t2(i, j))/h;
+        dt*u2(i, j)*(t2(i+1, j)-t1(nx+1, j))/(2*h)-dt*v2(i, j)*(t2(i, j+1)-t2(i, j-1))/(2*h);
     end, end
     for i=2:nx, for j=2:ny/2+1
         tt2(i, j) = t2(i, j)+dt*alpha*((t3(1, j)-2*t2(i,j)+t2(i-1, j))/(h^2)+(t2(i, j+1)-2*t2(i, j)+t2(i, j-1))/(h^2))-...
-        dt*u2(i, j)*(t3(1, j)-t2(i, j))/h-dt*v2(i, j)*(t2(i, j+1)-t2(i, j))/h;
+        dt*u2(i, j)*(t2(i+1, j)-t2(i-1, j))/(2*h)-dt*v2(i, j)*(t2(i, j+1)-t2(i, j-1))/(2*h);
     end, end
     for j=2:ny/2+1
         tt2(nx+1, j) = t2(nx+1, j)+dt*alpha*((t3(1, j)-2*t2(nx+1,j)+t2(nx, j))/(h^2)+(t2(nx+1, j+1)-2*t2(nx+1, j)+t2(nx+1, j-1))/(h^2))-...
-        dt*u2(nx+1, j)*(t3(1, j)-t2(nx+1, j))/h-dt*dt*v2(nx+1, j)*(t2(nx+1, j+1)-t2(nx+1, j))/h;
+        dt*u2(nx+1, j)*(t3(1, j)-t2(nx, j))/(2*h)-dt*v2(nx+1, j)*(t2(nx+1, j+1)-t2(nx+1, j-1))/(2*h);
     end
     for i=1, for j=2:ny+1
         tt3(i, j) = t3(i, j)+dt*alpha*((t3(i+1, j)-2*t3(i,j)+t2(nx+1, j))/(h^2)+(t3(i, j+1)-2*t3(i, j)+t3(i, j-1))/(h^2))-...
-        dt*u3(i, j)*(t3(i+1, j)-t3(i, j))/h-dt*v3(i, j)*(t3(i, j+1)-t3(i, j))/h;
+        dt*u3(i, j)*(t3(i+1, j)-t2(nx+1, j))/(2*h)-dt*v3(i, j)*(t3(i, j+1)-t3(i, j-1))/(2*h);
     end, end
     for i=2:nxx, for j=2:ny+1
         tt3(i, j) = t3(i, j)+dt*alpha*((t3(i+1, j)-2*t3(i,j)+t3(i-1, j))/(h^2)+(t3(i, j+1)-2*t3(i, j)+t3(i, j-1))/(h^2))-...
-        dt*u3(i, j)*(t3(i+1, j)-t3(i, j))/h-dt*v3(i, j)*(t3(i, j+1)-t3(i, j))/h;
+        dt*u3(i, j)*(t3(i+1, j)-t3(i-1, j))/(2*h)-dt*v3(i, j)*(t3(i, j+1)-t3(i, j-1))/(2*h);
     end, end
     t1 = tt1;
     t2 = tt2;
